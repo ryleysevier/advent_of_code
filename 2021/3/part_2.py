@@ -1,10 +1,9 @@
-def find_rating(matrix, curr_col, get_most_common):
+def find_rating(matrix, get_most_common, curr_col=0):
     # base case
     if len(matrix) == 1:
         return matrix[0]
 
-    ones = []
-    zeds = []
+    ones = [], zeds = []
     # iterate vertically
     for y in range(0, len(matrix)):
         curr_val = matrix[y][curr_col]
@@ -14,9 +13,8 @@ def find_rating(matrix, curr_col, get_most_common):
             ones.append(matrix[y])
 
     if get_most_common:
-        return (zeds,ones)[len(ones) >= len(zeds)]
-    
-    return (zeds,ones)[len(ones) < len(zeds)]
+        return find_rating((zeds,ones)[len(ones) >= len(zeds)], get_most_common, curr_col + 1)
+    return find_rating((zeds,ones)[len(ones) < len(zeds)], get_most_common, curr_col + 1)
 
 
 data = []
@@ -33,25 +31,15 @@ epp_out = []
 gam_out = []
 # it's an invert bit count for the second opp. just flip the bits after you get one
 
-current_col = 0
-oxy = matrix
-while len(oxy) > 1:
-    oxy = find_rating(oxy, current_col, True)
-    current_col = current_col + 1
-
-current_col = 0
-co2 = matrix
-while len(co2) > 1:
-    co2 = find_rating(co2, current_col, False)
-    current_col = current_col + 1
-
+oxy = find_rating(matrix, True)
+co2 = find_rating(matrix, False)
 
 o2_rating = 0
-for bit in oxy[0]:
+for bit in oxy:
     o2_rating = (o2_rating << 1) | int(bit)
 
 co2_rating = 0
-for bit in co2[0]:
+for bit in co2:
     co2_rating = (co2_rating << 1) | int(bit)
 
 print(f'{o2_rating} {co2_rating} {o2_rating * co2_rating}')
