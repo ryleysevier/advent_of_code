@@ -1,33 +1,8 @@
-import math
-
-class vent:
-    def __init__(self, val):
-        self.value = val
-        self.used = False
-
-    def __repr__(self) -> str:
-        return self.__str__()
-
-    def __str__(self):
-        if self.value == 0:
-            return '.'
-        return str(self.value)
-
 class grid:
 
-    height = 1000
-    width = 1000
-
     def __init__(self):
-        self.matrix = []
+        self.matrix = {}
         self.overlap = {}
-
-        for y in range(0, grid.height):
-            row = []
-            for x in range(0, grid.width):
-                row.append(vent(0))
-            self.matrix.append(row)
-
 
     def __repr__(self) -> str:
         return self.__str__()
@@ -51,9 +26,9 @@ class grid:
 
         points = self.generate_points(x1,y1,x2,y2)
         for point in points:
-            curr_val = self.matrix[point[1]][point[0]].value + 1
+            curr_val = self.matrix.get(f'{point[1]},{point[0]}', 0) + 1
             self.check_high(curr_val, point[0], point[1])
-            self.matrix[point[1]][point[0]].value = curr_val
+            self.matrix[f'{point[1]},{point[0]}'] = curr_val
 
 
     def generate_points(self, x1, y1, x2, y2):
